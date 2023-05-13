@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">ProyectoFaceLogin</string>
+    <string name="app_name">Login con Facebook</string>
+
+
+    <string name="facebook_app_id">530135872452478</string>
+    <string name="fb_login_protocol_scheme">fb530135872452478</string>
+    <string name="facebook_client_token">d640c03368016b9c609212327c8402e6</string>
+
+
 </resources>
