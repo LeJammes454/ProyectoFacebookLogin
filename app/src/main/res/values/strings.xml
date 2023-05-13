@@ -2,9 +2,10 @@
     <string name="app_name">Login con Facebook</string>
 
 
-    <string name="facebook_app_id">530135872452478</string>
-    <string name="fb_login_protocol_scheme">fb530135872452478</string>
-    <string name="facebook_client_token">d640c03368016b9c609212327c8402e6</string>
+    <string name="facebook_app_id">1632842200529773</string>
+    <string name="fb_login_protocol_scheme">fb1632842200529773</string>
+    <string name="facebook_client_token">d581e6d2631e60bd90c6eb4fd31ca5db</string>
+    <string name="profile_picture" />
 
 
 </resources>

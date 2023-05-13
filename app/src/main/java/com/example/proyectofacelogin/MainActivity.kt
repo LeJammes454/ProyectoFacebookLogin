@@ -1,22 +1,18 @@
 package com.example.proyectofacelogin
-
 import android.content.Intent
-import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Base64
 import android.util.Log
-import com.facebook.CallbackManager
-import com.facebook.FacebookCallback
-import com.facebook.FacebookException
+import androidx.appcompat.app.AppCompatActivity
+import com.facebook.*
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
-import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
+import com.facebook.login.widget.LoginButton
 
 class MainActivity : AppCompatActivity() {
-
     private lateinit var callbackManager: CallbackManager
+
+    private val PERMISSIONS = listOf("pages_read_engagement", "pages_manage_posts")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -24,8 +20,25 @@ class MainActivity : AppCompatActivity() {
         // Inicializar el CallbackManager
         callbackManager = CallbackManager.Factory.create()
 
-        // Llamada a la función para generar el hash clave
-        //generateKeyHash()
+        // Configurar el botón de inicio de sesión de Facebook
+        val loginButton: LoginButton = findViewById(R.id.login_button)
+        loginButton.setPermissions(PERMISSIONS)
+        loginButton.registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
+          
+
+            override fun onCancel() {
+                // El usuario canceló la solicitud de permisos
+            }
+
+            override fun onError(error: FacebookException) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onSuccess(result: LoginResult) {
+                publishPostToPage()
+            }
+
+        })
     }
 
     // Sobrescribir el método onActivityResult para llamar a callbackManager.onActivityResult
@@ -35,46 +48,32 @@ class MainActivity : AppCompatActivity() {
         callbackManager.onActivityResult(requestCode, resultCode, data)
     }
 
-    // Crear una función para manejar el inicio de sesión de Facebook
-    private fun loginWithFacebook() {
-        // Definir los permisos que se solicitarán al usuario durante el inicio de sesión
-        val permissions = listOf("email", "public_profile")
+    private fun publishPostToPage() {
+        val parameters = Bundle()
+        parameters.putString("message", "Texto de tu publicación")
 
-        // Iniciar sesión con los permisos definidos y el CallbackManager
-        LoginManager.getInstance().logInWithReadPermissions(this, permissions)
-
-        // Registrar el callback para manejar el resultado del inicio de sesión
-        LoginManager.getInstance().registerCallback(callbackManager,
-            object : FacebookCallback<LoginResult> {
-                override fun onSuccess(loginResult: LoginResult) {
-                    // El inicio de sesión fue exitoso, puedes acceder a los datos del usuario usando loginResult.accessToken.
+        val request = GraphRequest(
+            AccessToken.getCurrentAccessToken(),
+            "/{page-id}/feed",
+            parameters,
+            HttpMethod.POST,
+            object : GraphRequest.Callback {
+                override fun onCompleted(response: GraphResponse) {
+                    // Aquí puedes manejar la respuesta de la publicación
+                    val postId = response.getJSONObject()?.getString("id")
+                    if (postId != null) {
+                        // La publicación se realizó exitosamente
+                        Log.d("Post", "Publicación exitosa. ID: $postId")
+                    } else {
+                        // La publicación falló
+                        Log.d("Post", "La publicación falló")
+                    }
                 }
-
-                override fun onCancel() {
-                    // El usuario canceló el inicio de sesión.
-                }
-
-                override fun onError(exception: FacebookException) {
-                    // Ocurrió un error durante el inicio de sesión.
-                }
-            })
-    }
-    private fun generateKeyHash() {
-        try {
-            val packageName = packageName
-            val packageInfo = packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNATURES)
-            val signatures = packageInfo.signatures
-
-            val md = MessageDigest.getInstance("SHA")
-            for (signature in signatures) {
-                md.update(signature.toByteArray())
-                val hashKey = String(Base64.encode(md.digest(), Base64.DEFAULT))
-                Log.d("KeyHash", hashKey)
             }
-        } catch (e: PackageManager.NameNotFoundException) {
-            e.printStackTrace()
-        } catch (e: NoSuchAlgorithmException) {
-            e.printStackTrace()
-        }
+        )
+
+        request.executeAsync()
     }
+
+
 }
