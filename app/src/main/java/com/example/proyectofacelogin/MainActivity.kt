@@ -10,6 +10,7 @@ import android.util.Log
 import android.widget.Toast
 import com.example.proyectofacelogin.databinding.ActivityMainBinding
 import com.facebook.*
+import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.facebook.login.widget.LoginButton
 import com.facebook.share.Sharer
@@ -23,7 +24,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var callbackManager: CallbackManager
-
+    private var bandera = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -34,9 +35,11 @@ class MainActivity : AppCompatActivity() {
         callbackManager = CallbackManager.Factory.create()
         binding.loginButton.setPermissions("email")
 
+
         binding.loginButton.registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
             override fun onSuccess(loginResult: LoginResult) {
                 val accessToken = loginResult.accessToken
+
 
                 // Obtener datos del usuario
                 val request = GraphRequest.newMeRequest(accessToken) { jsonObject, response ->
@@ -46,6 +49,7 @@ class MainActivity : AppCompatActivity() {
                     // Mostrar datos en la interfaz de usuario
                     binding.txtName.text = name
                     binding.txtEmail.text = email
+
                 }
 
                 val parameters = Bundle()
@@ -55,7 +59,6 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onCancel() {
-                // El usuario canceló el inicio de sesión con Facebook
             }
 
             override fun onError(error: FacebookException) {
@@ -66,6 +69,7 @@ class MainActivity : AppCompatActivity() {
         binding.btnShare.setOnClickListener {
             shareContent()
         }
+
     }
 
     private fun shareContent() {
@@ -94,6 +98,7 @@ class MainActivity : AppCompatActivity() {
 
         shareDialog.show(shareContent, ShareDialog.Mode.AUTOMATIC)
     }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
