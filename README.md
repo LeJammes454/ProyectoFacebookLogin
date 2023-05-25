@@ -37,10 +37,6 @@ Esta es una aplicación de Android que te permite iniciar sesión con tu cuenta 
 5. Puedes utilizar el botón de compartir contenido para compartir en Facebook. Se abrirá un cuadro de diálogo que te permitirá ingresar una URL y un texto adicional.
 6. Una vez que ingreses los detalles y hagas clic en "Compartir", se publicará el contenido en tu perfil de Facebook.
 
-## Contribución
-
-Las contribuciones son bienvenidas. Si deseas mejorar la aplicación, por favor, envía un pull request o crea un issue para discutir tus ideas.
-
 ## Licencia
 
 Este proyecto se distribuye bajo la licencia MIT. Consulta el archivo [LICENSE](LIENSE) para obtener más detalles.
