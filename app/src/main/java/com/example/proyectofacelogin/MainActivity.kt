@@ -7,10 +7,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Base64
 import android.util.Log
+import android.widget.Toast
 import com.example.proyectofacelogin.databinding.ActivityMainBinding
 import com.facebook.*
 import com.facebook.login.LoginResult
 import com.facebook.login.widget.LoginButton
+import com.facebook.share.Sharer
 import com.facebook.share.model.ShareLinkContent
 import com.facebook.share.widget.ShareDialog
 import org.json.JSONObject
@@ -72,7 +74,25 @@ class MainActivity : AppCompatActivity() {
             .setQuote("¡Mira este contenido compartido desde mi aplicación!") // Texto adicional que deseas incluir
             .build()
 
-        ShareDialog.show(this, shareContent)
+        val shareDialog = ShareDialog(this)
+        shareDialog.registerCallback(callbackManager, object : FacebookCallback<Sharer.Result> {
+
+
+            override fun onCancel() {
+                Toast.makeText(applicationContext, "Compartir cancelado", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onError(error: FacebookException) {
+                Toast.makeText(applicationContext, "Error al compartir: ${error?.message}", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onSuccess(result: Sharer.Result) {
+                Toast.makeText(applicationContext, "Contenido compartido exitosamente", Toast.LENGTH_SHORT).show()
+            }
+
+        })
+
+        shareDialog.show(shareContent, ShareDialog.Mode.AUTOMATIC)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
