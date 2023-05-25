@@ -6,6 +6,7 @@
     <string name="fb_login_protocol_scheme">fb1632842200529773</string>
     <string name="facebook_client_token">d581e6d2631e60bd90c6eb4fd31ca5db</string>
     <string name="profile_picture" />
+    <string name="Compartir">compartir</string>
 
 
 </resources>

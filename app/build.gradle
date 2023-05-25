@@ -47,6 +47,7 @@ dependencies {
 
 
     implementation 'com.facebook.android:facebook-android-sdk:13.0.0'
+    implementation 'com.facebook.android:facebook-share:13.0.0'
 
 
 }

@@ -2,17 +2,18 @@ package com.example.proyectofacelogin
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Base64
 import android.util.Log
 import com.example.proyectofacelogin.databinding.ActivityMainBinding
-import com.facebook.CallbackManager
-import com.facebook.FacebookCallback
-import com.facebook.FacebookException
-import com.facebook.GraphRequest
+import com.facebook.*
 import com.facebook.login.LoginResult
 import com.facebook.login.widget.LoginButton
+import com.facebook.share.model.ShareLinkContent
+import com.facebook.share.widget.ShareDialog
+import org.json.JSONObject
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 
@@ -23,10 +24,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
-
-        //generateKeyHash(this, packageName)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
@@ -63,12 +60,27 @@ class MainActivity : AppCompatActivity() {
                 // Ocurrió un error durante el inicio de sesión con Facebook
             }
         })
+
+        binding.btnShare.setOnClickListener {
+            shareContent()
+        }
+    }
+
+    private fun shareContent() {
+        val shareContent = ShareLinkContent.Builder()
+            .setContentUrl(Uri.parse("https://www.example.com")) // URL del contenido que deseas compartir
+            .setQuote("¡Mira este contenido compartido desde mi aplicación!") // Texto adicional que deseas incluir
+            .build()
+
+        ShareDialog.show(this, shareContent)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         callbackManager.onActivityResult(requestCode, resultCode, data)
     }
+
+
 
     // Método para generar la Key Hash
     fun generateKeyHash(context: Context, packageName: String) {
@@ -87,5 +99,7 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
 }
+
 
